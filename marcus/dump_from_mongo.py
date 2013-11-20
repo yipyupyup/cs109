@@ -10,14 +10,14 @@ tweets = [{
 		'author': tweet['author']['name'],
 		'username': tweet['author']['nick'],
 		'tokens': "|".join([x[0] for x in tweet['tweet']['topsy']['tokens']]),
-		'lat': tweet['tweet']['geo']['coordinates'][0] if tweet['tweet']['geo'] is not None else None,
-		'lng': tweet['tweet']['geo']['coordinates'][1] if tweet['tweet']['geo'] is not None else None,
-		'city': tweet['tweet']['topsy']['location']['tags']['city'] if 'city' in tweet['tweet']['topsy']['location']['tags'] else None,
-		'geo_admin1': tweet['tweet']['topsy']['location']['tags']['admin1'] if 'admin1' in tweet['tweet']['topsy']['location']['tags'] else None,
-		'geo_admin2': tweet['tweet']['topsy']['location']['tags']['admin2'] if 'admin2' in tweet['tweet']['topsy']['location']['tags'] else None,
-		'geo_admin0': tweet['tweet']['topsy']['location']['tags']['admin0'] if 'admin0' in tweet['tweet']['topsy']['location']['tags'] else None,
-		} for tweet in db.geo_tweets_new.find()]
+		# 'lat': tweet['tweet']['geo']['coordinates'][0] if tweet['tweet']['geo'] is not None else None,
+		# 'lng': tweet['tweet']['geo']['coordinates'][1] if tweet['tweet']['geo'] is not None else None,
+		# 'city': tweet['tweet']['topsy']['location']['tags']['city'] if 'city' in tweet['tweet']['topsy']['location']['tags'] else None,
+		# 'geo_admin1': tweet['tweet']['topsy']['location']['tags']['admin1'] if 'admin1' in tweet['tweet']['topsy']['location']['tags'] else None,
+		# 'geo_admin2': tweet['tweet']['topsy']['location']['tags']['admin2'] if 'admin2' in tweet['tweet']['topsy']['location']['tags'] else None,
+		# 'geo_admin0': tweet['tweet']['topsy']['location']['tags']['admin0'] if 'admin0' in tweet['tweet']['topsy']['location']['tags'] else None,
+		} for tweet in db.tweets.find()]
 
 df = pd.DataFrame.from_records(tweets)
 
-df.to_csv("geo_tweets.csv", encoding="utf-8")
+df.to_csv("all_tweets.csv", encoding="utf-8")
