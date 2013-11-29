@@ -16,8 +16,8 @@ tweets = [{
 		# 'geo_admin1': tweet['tweet']['topsy']['location']['tags']['admin1'] if 'admin1' in tweet['tweet']['topsy']['location']['tags'] else None,
 		# 'geo_admin2': tweet['tweet']['topsy']['location']['tags']['admin2'] if 'admin2' in tweet['tweet']['topsy']['location']['tags'] else None,
 		# 'geo_admin0': tweet['tweet']['topsy']['location']['tags']['admin0'] if 'admin0' in tweet['tweet']['topsy']['location']['tags'] else None,
-		} for tweet in db.tweets.find()]
+		} for tweet in db.tweets.find() if 'retweet' not in tweet['type']]
 
 df = pd.DataFrame.from_records(tweets)
 
-df.to_csv("all_tweets.csv", encoding="utf-8")
+df.to_csv("all_tweets4.csv", encoding="utf-8")
