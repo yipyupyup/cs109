@@ -71,6 +71,8 @@ def remove_border(axes=None, top=False, right=False, left=True, bottom=True):
 pd.set_option('display.width', 500)
 pd.set_option('display.max_columns', 100)
 
+########################################################
+
 # <codecell>
 
 #Read in Diana's electiondata 
@@ -99,8 +101,41 @@ election_dict['Connecticut']
 
 # <codecell>
 
+electiondata.head()
+
+# <codecell>
+
+#Calculate percentages for District of Columbia by summing wards
+
+# perhaps pass groupings as a parameter <- thank you Rabeea!
+def get_state_data (state_name, data_col):
+    indices = groupings[state_name]
+    state_data = []
+    for i in indices:
+        state_data.append(electiondata.ix[i][data_col])
+    return state_data
+
+#Get election data for DC
+groupings = electiondata.groupby('State').groups
+states = sorted(groupings.keys())
+dc_data = pd.DataFrame(get_state_data('District of Columbia', ["RepVotes", "DemVotes"]))
+
+# <codecell>
+
+#Sum votes
+rep_total = sum([float(i.replace(",","")) for i in dc_data['RepVotes']])
+dem_total = sum([float(i.replace(",","")) for i in dc_data['DemVotes']])
+
+rep_percent = rep_total/(rep_total + dem_total)
+
+#Revise dictionary
+election_dict['District of Columbia'] = {'districtofcolumbia':rep_percent}
+
+# <codecell>
+
 #Read in tweets
-tweets = pd.read_csv("tweet_data/geo_tweets_with_dist.csv")
+#tweets = pd.read_csv("tweet_data/geo_tweets_with_dist.csv")
+tweets = pd.read_csv("GEO.csv") #contiguous US -> no Alaska/Hawaii
 
 #Include only US tweets and remove rows with missing data for state or county
 tweets_us = tweets[(tweets['geo_admin0'] == 'United States') & (tweets['geo_admin1'] != 'Puerto Rico')]
@@ -141,10 +176,6 @@ def match_table(state_dict, tweet):
 
 repmaj = tweets_us.apply(lambda x: match_table(election_dict, x), axis=1)
 
-#There are problems with Alaska and DC
-    #Alaska - different election districts
-    #District of Columbia - different wards
-
 # <codecell>
 
 print len(repmaj) #how many tweets?
@@ -177,7 +208,12 @@ tweets_us['RepVotesMajorDist'] = repmaj_dist
 
 # <codecell>
 
-tweets_us.to_csv('geo_tweets_with_dist_with_electiondata.csv')
+#tweets_us.to_csv('geo_tweets_with_dist_with_electiondata.csv')
+tweets_us.to_csv('GEO_electiondata.csv')
+
+# <codecell>
+
+tweets_us.head()
 
 # <codecell>
 
